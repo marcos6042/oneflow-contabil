@@ -34,15 +34,18 @@ export function DashboardColorido() {
   const [filial, setFilial] = useState('Todas');
   const ref = useRef(null);
   const [dados, setDados] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState(null);
 
   useEffect(() => {
     async function carregarDados() {
-      const { data, error } = await supabase
-        .from('lancamentos')
-        .select('*')
-        .eq('tipo', 'receita');
+      let query = supabase.from('lancamentos').select('*');
+      if (filial !== 'Todas') query = query.eq('filial', filial);
 
-      if (!error && data) setDados(data);
+      const { data, error } = await query;
+      if (error) setErro(error.message);
+      if (data) setDados(data);
+      setLoading(false);
     }
 
     carregarDados();
@@ -138,6 +141,10 @@ export function DashboardColorido() {
         <button onClick={exportarExcel} className="bg-green-600 text-white px-4 py-2 rounded">Exportar Excel</button>
       </div>
 
+      {erro && <p className="text-red-500 mb-4">Erro: {erro}</p>}
+      {loading ? (
+        <p className="text-gray-600">Carregando dados...</p>
+      ) : (
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Resumo por Tipo de Conta</h3>
@@ -151,7 +158,7 @@ export function DashboardColorido() {
           <h3 className="text-lg font-semibold mb-2">Evolução da Receita</h3>
           <Line data={dadosLinha} />
         </div>
-      </div>
+      )}
     </div>
   );
 }
