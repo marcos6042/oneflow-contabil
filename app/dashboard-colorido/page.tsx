@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import Link from 'next/link';
 import html2canvas from 'html2canvas';
+import { supabase } from '@/supabase/client';
 import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
 import {
@@ -32,6 +33,20 @@ ChartJS.register(
 export function DashboardColorido() {
   const [filial, setFilial] = useState('Todas');
   const ref = useRef(null);
+  const [dados, setDados] = useState([]);
+
+  useEffect(() => {
+    async function carregarDados() {
+      const { data, error } = await supabase
+        .from('lancamentos')
+        .select('*')
+        .eq('tipo', 'receita');
+
+      if (!error && data) setDados(data);
+    }
+
+    carregarDados();
+  }, [filial]);
 
   const exportarPDF = async () => {
     const canvas = await html2canvas(ref.current);
