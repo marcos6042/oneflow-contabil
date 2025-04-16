@@ -1,11 +1,7 @@
+// Dashboard Interativo com Gráficos e Exportações
 'use client'
 
-import { useRef, useState } from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
-import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,10 +25,15 @@ ChartJS.register(
   Legend
 );
 
-export default function DashboardColorido() {
-  const [empresa, setEmpresa] = useState('Rodoxisto Transportes');
-  const refDashboard = useRef(null);
+import { useRef } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 
+import Link from 'next/link';
+
+export function DashboardColorido() {
+  const ref = useRef(null);
   const dadosBarra = {
     labels: ['Receitas', 'Despesas', 'Lucro'],
     datasets: [{
@@ -63,7 +64,8 @@ export default function DashboardColorido() {
   };
 
   const exportarPDF = async () => {
-    const canvas = await html2canvas(refDashboard.current);
+    if (!ref.current) return;
+    const canvas = await html2canvas(ref.current);
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'pt', 'a4');
     const width = pdf.internal.pageSize.getWidth();
@@ -74,7 +76,7 @@ export default function DashboardColorido() {
 
   const exportarExcel = () => {
     const wb = XLSX.utils.book_new();
-    const dados = [
+    const ws = XLSX.utils.aoa_to_sheet([
       ['Receitas', 'Despesas', 'Lucro'],
       [120000, 78500, 41500],
       [],
@@ -83,52 +85,27 @@ export default function DashboardColorido() {
       [],
       ['Jan', 'Fev', 'Mar', 'Abr'],
       [120000, 132000, 118000, 140000]
-    ];
-    const ws = XLSX.utils.aoa_to_sheet(dados);
+    ]);
     XLSX.utils.book_append_sheet(wb, ws, 'Dashboard');
     XLSX.writeFile(wb, 'dashboard.xlsx');
   };
 
   return (
-    <div className="p-6 bg-slate-50 min-h-screen" ref={refDashboard}>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard Financeiro</h1>
-
-      <div className="mb-4">
-        <label className="mr-2 font-medium text-gray-700">Empresa:</label>
-        <select
-          className="p-2 border rounded"
-          value={empresa}
-          onChange={(e) => setEmpresa(e.target.value)}
-        >
-          <option>Rodoxisto Transportes</option>
-          <option>RDX Logística</option>
-        </select>
-      </div>
-
-      <div className="mb-6 flex gap-4">
+    <div className="p-6 bg-slate-50 min-h-screen" ref={ref}>
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard Interativo</h1>
+      <nav className="flex flex-wrap gap-4 text-sm text-blue-700 mb-6">
+        <Link href="/">🏠 Início</Link>
+        <Link href="/cadastro-empresa">Cadastro Empresa</Link>
+        <Link href="/cadastro-grupos-economicos">Grupos Econômicos</Link>
+        <Link href="/configuracao-layout-planilha">Configurar Layout</Link>
+        <Link href="/cadastro-regras-texto">Regras Texto</Link>
+        <Link href="/aprovar-lancamentos">Aprovar Lançamentos</Link>
+        <Link href="/dashboard-simples">Dashboard Simples</Link>
+      </nav>
+      <div className="mb-4 flex gap-4">
         <button onClick={exportarPDF} className="bg-blue-600 text-white px-4 py-2 rounded">Exportar PDF</button>
         <button onClick={exportarExcel} className="bg-green-600 text-white px-4 py-2 rounded">Exportar Excel</button>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded-xl shadow">
-          <p className="text-sm">Total Receitas</p>
-          <h2 className="text-2xl font-bold">R$ 120.000,00</h2>
-        </div>
-        <div className="bg-gradient-to-r from-red-500 to-red-600 text-white p-4 rounded-xl shadow">
-          <p className="text-sm">Total Despesas</p>
-          <h2 className="text-2xl font-bold">R$ 78.500,00</h2>
-        </div>
-        <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-4 rounded-xl shadow">
-          <p className="text-sm">Saldo Operacional</p>
-          <h2 className="text-2xl font-bold">R$ 41.500,00</h2>
-        </div>
-        <div className="bg-gradient-to-r from-purple-500 to-purple-600 text-white p-4 rounded-xl shadow">
-          <p className="text-sm">Lançamentos</p>
-          <h2 className="text-2xl font-bold">327</h2>
-        </div>
-      </div>
-
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Resumo por Tipo de Conta</h3>
