@@ -61,31 +61,37 @@ export function DashboardColorido() {
 
   const dadosBarra = {
     labels: ['Receitas', 'Despesas', 'Lucro'],
-    datasets: [{
-      label: `Competência 01/2025 (${filial})`,
-      data: [120000, 78500, 41500],
-      backgroundColor: ['#10b981', '#ef4444', '#3b82f6']
-    }]
+    datasets: [
+      {
+        label: `Competência 01/2025 (${filial})`,
+        data: [120000, 78500, 41500],
+        backgroundColor: ['#10b981', '#ef4444', '#3b82f6']
+      }
+    ]
   };
 
   const dadosPizza = {
     labels: ['Administrativo', 'Operacional', 'Marketing', 'TI'],
-    datasets: [{
-      label: 'Centro de Custo',
-      data: [28000, 32000, 11000, 7500],
-      backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981']
-    }]
+    datasets: [
+      {
+        label: 'Centro de Custo',
+        data: [28000, 32000, 11000, 7500],
+        backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981']
+      }
+    ]
   };
 
   const dadosLinha = {
     labels: ['Jan', 'Fev', 'Mar', 'Abr'],
-    datasets: [{
-      label: 'Evolução Receita',
-      data: [120000, 132000, 118000, 140000],
-      fill: false,
-      borderColor: '#2563eb',
-      tension: 0.3
-    }]
+    datasets: [
+      {
+        label: 'Evolução Receita',
+        data: [120000, 132000, 118000, 140000],
+        fill: false,
+        borderColor: '#2563eb',
+        tension: 0.3
+      }
+    ]
   };
 
   return (
