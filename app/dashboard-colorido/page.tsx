@@ -77,34 +77,46 @@ export function DashboardColorido() {
     XLSX.writeFile(wb, 'dashboard.xlsx');
   };
 
+  const totalReceitas = dados.filter(d => d.tipo === 'receita').reduce((s, l) => s + Number(l.valor), 0);
+  const totalDespesas = dados.filter(d => d.tipo === 'despesa').reduce((s, l) => s + Number(l.valor), 0);
   const dadosBarra = {
     labels: ['Receitas', 'Despesas', 'Lucro'],
     datasets: [
       {
-        label: `Competência 01/2025 (${filial})`,
-        data: [120000, 78500, 41500],
+        label: `Resumo (${filial})`,
+        data: [totalReceitas, totalDespesas, totalReceitas - totalDespesas],
         backgroundColor: ['#10b981', '#ef4444', '#3b82f6']
       }
     ]
   };
 
+  const porCentro = dados.reduce((acc, cur) => {
+    if (!acc[cur.centro_custo]) acc[cur.centro_custo] = 0;
+    acc[cur.centro_custo] += Number(cur.valor);
+    return acc;
+  }, {});
   const dadosPizza = {
-    labels: ['Administrativo', 'Operacional', 'Marketing', 'TI'],
+    labels: Object.keys(porCentro),
     datasets: [
       {
         label: 'Centro de Custo',
-        data: [28000, 32000, 11000, 7500],
-        backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981']
+        data: Object.values(porCentro),
+        backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981', '#3b82f6', '#9333ea']
       }
     ]
   };
 
+  const meses = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+  const receitasPorMes = meses.map(m => {
+    return dados.filter(d => d.tipo === 'receita' && d.data?.slice(5,7) === m)
+                .reduce((s, l) => s + Number(l.valor), 0);
+  });
   const dadosLinha = {
-    labels: ['Jan', 'Fev', 'Mar', 'Abr'],
+    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
     datasets: [
       {
         label: 'Evolução Receita',
-        data: [120000, 132000, 118000, 140000],
+        data: receitasPorMes,
         fill: false,
         borderColor: '#2563eb',
         tension: 0.3
