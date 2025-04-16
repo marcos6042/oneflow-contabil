@@ -1,7 +1,11 @@
-// Dashboard Interativo com Gráficos e Exportações
 'use client'
 
+import { useRef, useState } from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
+import Link from 'next/link';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -25,46 +29,11 @@ ChartJS.register(
   Legend
 );
 
-import { useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import * as XLSX from 'xlsx';
-
-import Link from 'next/link';
-
 export function DashboardColorido() {
+  const [filial, setFilial] = useState('Todas');
   const ref = useRef(null);
-  const dadosBarra = {
-    labels: ['Receitas', 'Despesas', 'Lucro'],
-    datasets: [{
-      label: 'Competência 01/2025',
-      data: [120000, 78500, 41500],
-      backgroundColor: ['#10b981', '#ef4444', '#3b82f6']
-    }]
-  };
-
-  const dadosPizza = {
-    labels: ['Administrativo', 'Operacional', 'Marketing', 'TI'],
-    datasets: [{
-      label: 'Centro de Custo',
-      data: [28000, 32000, 11000, 7500],
-      backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981']
-    }]
-  };
-
-  const dadosLinha = {
-    labels: ['Jan', 'Fev', 'Mar', 'Abr'],
-    datasets: [{
-      label: 'Evolução Receita',
-      data: [120000, 132000, 118000, 140000],
-      fill: false,
-      borderColor: '#2563eb',
-      tension: 0.3
-    }]
-  };
 
   const exportarPDF = async () => {
-    if (!ref.current) return;
     const canvas = await html2canvas(ref.current);
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'pt', 'a4');
@@ -90,9 +59,39 @@ export function DashboardColorido() {
     XLSX.writeFile(wb, 'dashboard.xlsx');
   };
 
+  const dadosBarra = {
+    labels: ['Receitas', 'Despesas', 'Lucro'],
+    datasets: [{
+      label: `Competência 01/2025 (${filial})`,
+      data: [120000, 78500, 41500],
+      backgroundColor: ['#10b981', '#ef4444', '#3b82f6']
+    }]
+  };
+
+  const dadosPizza = {
+    labels: ['Administrativo', 'Operacional', 'Marketing', 'TI'],
+    datasets: [{
+      label: 'Centro de Custo',
+      data: [28000, 32000, 11000, 7500],
+      backgroundColor: ['#6366f1', '#f59e0b', '#ef4444', '#10b981']
+    }]
+  };
+
+  const dadosLinha = {
+    labels: ['Jan', 'Fev', 'Mar', 'Abr'],
+    datasets: [{
+      label: 'Evolução Receita',
+      data: [120000, 132000, 118000, 140000],
+      fill: false,
+      borderColor: '#2563eb',
+      tension: 0.3
+    }]
+  };
+
   return (
     <div className="p-6 bg-slate-50 min-h-screen" ref={ref}>
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Dashboard Interativo</h1>
+      <h1 className="text-3xl font-bold mb-4">Dashboard Interativo</h1>
+
       <nav className="flex flex-wrap gap-4 text-sm text-blue-700 mb-6">
         <Link href="/">🏠 Início</Link>
         <Link href="/cadastro-empresa">Cadastro Empresa</Link>
@@ -102,10 +101,22 @@ export function DashboardColorido() {
         <Link href="/aprovar-lancamentos">Aprovar Lançamentos</Link>
         <Link href="/dashboard-simples">Dashboard Simples</Link>
       </nav>
-      <div className="mb-4 flex gap-4">
+
+      <div className="mb-6 flex gap-4 items-center">
+        <label className="font-medium">Filtrar por Filial:</label>
+        <select
+          className="p-2 border rounded"
+          value={filial}
+          onChange={(e) => setFilial(e.target.value)}
+        >
+          <option>Todas</option>
+          <option>Filial SP</option>
+          <option>Filial MG</option>
+        </select>
         <button onClick={exportarPDF} className="bg-blue-600 text-white px-4 py-2 rounded">Exportar PDF</button>
         <button onClick={exportarExcel} className="bg-green-600 text-white px-4 py-2 rounded">Exportar Excel</button>
       </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         <div className="bg-white p-4 rounded-lg shadow">
           <h3 className="text-lg font-semibold mb-2">Resumo por Tipo de Conta</h3>
