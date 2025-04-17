@@ -1,22 +1,58 @@
-'use client'
+'use client';
 
-export function ConfigurarLayout() {
-  const colunas = Array.from({ length: 52 }, (_, i) => String.fromCharCode(65 + i % 26) + (i >= 26 ? 'Z' : ''));
+import { useState } from 'react';
+
+export default function ConfiguracaoLayoutPlanilha() {
+  const [colunas, setColunas] = useState([
+    { campo: 'data', letra: '' },
+    { campo: 'descricao', letra: '' },
+    { campo: 'tipo', letra: '' },
+    { campo: 'valor', letra: '' },
+    { campo: 'centro_custo', letra: '' },
+    { campo: 'filial', letra: '' },
+    { campo: 'banco', letra: '' },
+    { campo: 'conta_debito', letra: '' },
+    { campo: 'conta_credito', letra: '' },
+    { campo: 'observacao', letra: '' }
+  ]);
+
+  const atualizarColuna = (index: number, letra: string) => {
+    const atualizadas = [...colunas];
+    atualizadas[index].letra = letra.toUpperCase();
+    setColunas(atualizadas);
+  };
+
+  const salvarLayout = () => {
+    alert('Layout salvo (simulado). Integre com Supabase se desejar persistir.');
+  };
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">Configuração de Layout da Planilha</h1>
-      <form className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {["Data", "Banco", "Cliente", "Valor", "Emitente", "Descrição", "Plano de Contas"].map((campo, i) => (
-          <div key={i}>
-            <label className="block font-medium mb-1">{campo}</label>
-            <select className="w-full border p-2 rounded">
-              <option value="">Selecione a Coluna</option>
-              {colunas.map((col) => <option key={col}>{col}</option>)}
-            </select>
-          </div>
-        ))}
-        <button className="col-span-full mt-4 bg-green-600 text-white px-4 py-2 rounded">Salvar Configuração</button>
-      </form>
+    <div className="p-6 max-w-3xl">
+      <h1 className="text-2xl font-bold mb-4">Configuração de Layout da Planilha</h1>
+      <table className="w-full border text-sm mb-4">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="border px-2 py-1">Campo</th>
+            <th className="border px-2 py-1">Coluna (letra)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {colunas.map((c, i) => (
+            <tr key={i}>
+              <td className="border px-2 py-1">{c.campo}</td>
+              <td className="border px-2 py-1">
+                <input
+                  value={c.letra}
+                  onChange={e => atualizarColuna(i, e.target.value)}
+                  className="border p-1 rounded w-full"
+                  placeholder="Ex: A, B, C..."
+                />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button onClick={salvarLayout} className="bg-blue-600 text-white px-4 py-2 rounded">Salvar Layout</button>
     </div>
-  )
+  );
 }
