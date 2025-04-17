@@ -1,66 +1,81 @@
-# OneFlow - Sistema de Lançamentos Contábeis com Regras
+# 📘 OneFlow - Lançamentos Contábeis Automatizados
 
-OneFlow é um sistema moderno, intuitivo e automatizado para controle de lançamentos contábeis. Permite importar planilhas ou extratos, aplicar regras personalizadas para classificação e gerar dashboards gerenciais com filtros por filial, competência e centro de custo.
+Sistema moderno e automatizado de lançamentos contábeis com importação de planilhas, regras de classificação e dashboards visuais integrados.
 
-## 🔧 Tecnologias utilizadas
-- Next.js 13+ (App Router)
-- Supabase (como backend e banco de dados)
-- Tailwind CSS
-- React Chart.js 2 + Chart.js
-- XLSX para leitura e exportação de planilhas
-- jsPDF + html2canvas para exportação em PDF
+---
 
-## 📦 Instalação
+## 📦 Funcionalidades Principais
 
+- ✅ Cadastro de empresas e grupos econômicos
+- 📥 Importação de planilhas/extratos financeiros
+- 🧠 Aplicação automática de regras (ignorar ou aceitar)
+- 📊 Dashboards interativos com filtros por filial, competência e centro de custo
+- 🔄 Aprovação manual de lançamentos pendentes
+- 📂 Exportação para Excel e PDF
+
+---
+
+## 🧱 Estrutura do Sistema
+
+**Tabelas:**
+- `empresas`
+- `grupos_economicos`
+- `lancamentos`
+- `lancamentos_importados`
+- `regras_ignoradas`
+- `regras_combinadas`
+
+**Componentes:**
+- `DashboardSimples`, `DashboardColorido`
+- `ImportarPlanilhaComRegras`
+- `TelaLancamentosRegistro`, `AprovarLancamentos`
+- `CadastroEmpresa`, `CadastroGruposEconomicos`
+- `CadastroRegrasCombinadas`, `CadastroRegrasTexto`, `ListagemRegrasCombinadas`
+- `ConfiguracaoLayoutPlanilha`
+
+---
+
+## 🛠️ Como executar
+
+1. Clone o repositório e instale as dependências:
 ```bash
 npm install
 npm run dev
 ```
 
-## ⚙️ Configuração do Supabase
-1. Crie um projeto no [https://supabase.com](https://supabase.com)
-2. Copie a `anon` key e URL para o arquivo `.env.local`
+2. Configure o `.env.local` com a URL e a chave do Supabase:
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto>.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...chave...
-```
-3. Execute o script SQL disponível em `sql/estrutura_banco.sql`
-
-## 📁 Estrutura de Diretórios
-```
-app/
-  └── dashboard-simples/       → Dashboard com tabela
-  └── dashboard-colorido/      → Dashboard com gráficos
-  └── importar-planilha/       → Upload e processamento com regras
-  └── revisar-importacoes/     → Conferência dos lançamentos pendentes
-  └── regras/
-      ├── cadastro/            → Cadastro de regras compostas
-      └── listar/              → Listagem, edição e exclusão de regras
-
-components/
-  ├── FiltrosDashboard.tsx
-  ├── ImportarPlanilhaComRegras.tsx
-  ├── TelaLancamentosRegistro.tsx
-  ├── DashboardSimples.tsx
-  ├── DashboardColorido.tsx
-  ├── CadastroRegrasCombinadas.tsx
-  └── ListagemRegrasCombinadas.tsx
-
-utils/
-  └── processa_importacao_com_regras.ts
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 ```
 
-## ✅ Funcionalidades
-- Importação de planilhas Excel ou CSV
-- Aplicação de regras automáticas: ignorar ou aceitar
-- Cadastro de regras compostas com múltiplos critérios (campo, condição, valor)
-- Dashboards com filtros dinâmicos e exportação
-- Conferência manual de lançamentos pendentes
+3. Crie as tabelas executando o SQL disponível em `sql/estrutura_banco.sql` diretamente no Supabase.
 
-## 📊 Dashboards
-- Resumo financeiro com gráficos
-- Evolução mensal das receitas
-- Distribuição por centro de custo
+---
 
-## ✍️ Licença
-Este projeto é de uso interno. Adaptável para diferentes grupos empresariais.
+## 🌐 Rotas e Telas
+
+| Caminho                        | Tela                                      |
+|-------------------------------|-------------------------------------------|
+| `/dashboard-simples`         | Dashboard com totais e tabela             |
+| `/dashboard-colorido`        | Dashboard com gráficos interativos        |
+| `/importar-planilha`         | Upload e regras automáticas               |
+| `/revisar-importacoes`       | Conferência manual dos lançamentos        |
+| `/aprovar-lancamentos`       | Aprovação final dos lançamentos           |
+| `/cadastro-empresa`          | Cadastro de empresa                       |
+| `/cadastro-grupos-economicos`| Cadastro de grupos econômicos             |
+| `/cadastro-regras-texto`     | Cadastro rápido de regras simples         |
+| `/regras/cadastro`           | Cadastro de regras compostas              |
+| `/regras/listar`             | Edição e exclusão de regras               |
+| `/configuracao-layout-planilha` | Mapeamento de colunas da planilha     |
+
+---
+
+## ✨ Observações
+- Utilize o Supabase com a função `gen_random_uuid()` habilitada
+- Regras podem ser compostas e combinadas com lógica `AND` ou `OR`
+- Layout da planilha pode ser adaptado com base nas letras das colunas (A-Z)
+
+---
+
+Feito com 💼 e 🚀 para times contábeis de alta performance
