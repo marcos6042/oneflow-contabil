@@ -2,65 +2,70 @@
 
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { processaImportacaoComRegras } from '@/utils/processa_importacao_com_regras';
 
-export default function ImportarPlanilhaComRegras() {
-  const [empresaId, setEmpresaId] = useState('');
+export default function ImportarPlanilhaDetalhado() {
+  const [linhas, setLinhas] = useState<any[]>([]);
   const [arquivo, setArquivo] = useState<File | null>(null);
-  const [carregando, setCarregando] = useState(false);
+  const [layout, setLayout] = useState({
+    data: 'A', descricao: 'B', tipo: 'C', valor: 'D', centro_custo: 'E', filial: 'F', banco: 'G'
+  });
 
-  const importar = async () => {
-    if (!arquivo || !empresaId) return alert('Informe o arquivo e empresa');
-    setCarregando(true);
-
+  const handleImportar = async () => {
+    if (!arquivo) return alert('Selecione o arquivo');
     const buffer = await arquivo.arrayBuffer();
-    const workbook = XLSX.read(buffer, { type: 'buffer' });
-    const planilha = workbook.Sheets[workbook.SheetNames[0]];
-    const dados = XLSX.utils.sheet_to_json(planilha, { raw: false });
-
-    const lista = dados.map((linha: any) => ({
-      empresa_id: empresaId,
-      data: linha.Data || linha['Data Lançamento'],
-      descricao: linha.Descrição || linha.Histórico,
-      tipo: linha.Tipo?.toLowerCase(),
-      valor: parseFloat(linha.Valor),
-      centro_custo: linha['Centro de Custo'] || '',
-      filial: linha.Filial || '',
-      banco: linha.Banco || '',
-      origem_arquivo: arquivo.name
-    }));
-
-    await processaImportacaoComRegras(lista, empresaId);
-    alert('Importação finalizada com sucesso!');
-    setCarregando(false);
+    const wb = XLSX.read(buffer, { type: 'buffer' });
+    const planilha = wb.Sheets[wb.SheetNames[0]];
+    const json: any[] = XLSX.utils.sheet_to_json(planilha, { header: 1 });
+    const convertLetraParaIndice = (letra: string) => letra.toUpperCase().charCodeAt(0) - 65;
+    const dados = json.map((row, i) => ({
+      linha: i + 1,
+      data: row[convertLetraParaIndice(layout.data)] || '',
+      descricao: row[convertLetraParaIndice(layout.descricao)] || '',
+      tipo: row[convertLetraParaIndice(layout.tipo)] || '',
+      valor: row[convertLetraParaIndice(layout.valor)] || '',
+      centro_custo: row[convertLetraParaIndice(layout.centro_custo)] || '',
+      filial: row[convertLetraParaIndice(layout.filial)] || '',
+      banco: row[convertLetraParaIndice(layout.banco)] || ''
+    })).filter(r => r.data);
+    setLinhas(dados);
   };
 
   return (
-    <div className="p-6 max-w-2xl space-y-4">
-      <h1 className="text-2xl font-bold">Importar Planilha com Regras</h1>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Importar Planilha Detalhado</h1>
+      <input type="file" className="border p-2 rounded mb-4" onChange={e => setArquivo(e.target.files?.[0] || null)} />
+      <button onClick={handleImportar} className="bg-blue-600 text-white px-4 py-2 rounded">Carregar Dados</button>
 
-      <input
-        className="w-full border p-2 rounded"
-        placeholder="Informe o ID da empresa"
-        value={empresaId}
-        onChange={(e) => setEmpresaId(e.target.value)}
-      />
-
-      <input
-        type="file"
-        accept=".xlsx,.xls,.csv"
-        className="w-full border p-2 rounded"
-        onChange={(e) => setArquivo(e.target.files?.[0] || null)}
-      />
-
-      <button
-        onClick={importar}
-        disabled={carregando}
-        className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-      >
-        {carregando ? 'Importando...' : 'Importar e Processar'}
-      </button>
+      {linhas.length > 0 && (
+        <table className="w-full text-sm border mt-6">
+          <thead className="bg-gray-100">
+            <tr>
+              <th className="border px-2 py-1">Linha</th>
+              <th className="border px-2 py-1">Data</th>
+              <th className="border px-2 py-1">Descrição</th>
+              <th className="border px-2 py-1">Tipo</th>
+              <th className="border px-2 py-1">Valor</th>
+              <th className="border px-2 py-1">Centro Custo</th>
+              <th className="border px-2 py-1">Filial</th>
+              <th className="border px-2 py-1">Banco</th>
+            </tr>
+          </thead>
+          <tbody>
+            {linhas.map((l, i) => (
+              <tr key={i} className="text-center">
+                <td className="border px-2 py-1">{l.linha}</td>
+                <td className="border px-2 py-1">{l.data}</td>
+                <td className="border px-2 py-1">{l.descricao}</td>
+                <td className="border px-2 py-1">{l.tipo}</td>
+                <td className="border px-2 py-1">{l.valor}</td>
+                <td className="border px-2 py-1">{l.centro_custo}</td>
+                <td className="border px-2 py-1">{l.filial}</td>
+                <td className="border px-2 py-1">{l.banco}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
-
