@@ -1,91 +1,66 @@
+# OneFlow - Sistema de Lançamentos Contábeis com Regras
 
-# OneFlow Lançamentos Contábeis
+OneFlow é um sistema moderno, intuitivo e automatizado para controle de lançamentos contábeis. Permite importar planilhas ou extratos, aplicar regras personalizadas para classificação e gerar dashboards gerenciais com filtros por filial, competência e centro de custo.
 
-Sistema moderno, inteligente e automatizado para **geração de lançamentos contábeis** a partir de extratos financeiros, planilhas ou APIs bancárias, com foco em eficiência, conformidade e integração com múltiplas empresas e grupos econômicos.
+## 🔧 Tecnologias utilizadas
+- Next.js 13+ (App Router)
+- Supabase (como backend e banco de dados)
+- Tailwind CSS
+- React Chart.js 2 + Chart.js
+- XLSX para leitura e exportação de planilhas
+- jsPDF + html2canvas para exportação em PDF
 
-## 🚀 Funcionalidades Principais
-
-- Importação de planilhas e extratos com mapeamento configurável
-- Regras de lançamento com base em trechos de texto, favorecido, descrição, etc.
-- Interface moderna para revisar, aprovar e ajustar lançamentos
-- Dashboard interativo com KPIs, gráficos e filtros dinâmicos
-- Exportação de dados para PDF e Excel
-- Integração com plano de contas, múltiplas empresas e SCPs
-
-## 🧠 Estrutura do Sistema
-
-### 1. Configuração e Cadastro
-- Cadastro de empresas, grupos econômicos e SCPs
-- Importação e manutenção do plano de contas por empresa
-- Tela de configuração do layout da planilha (colunas A até AZ)
-
-### 2. Importação Detalhada
-- Visualização linha a linha das informações da planilha
-- Seleção manual ou automática de débito e crédito
-- Histórico customizável a partir de múltiplas colunas
-- Confirmação individual do lançamento
-
-### 3. Motor de Regras
-- Regras configuráveis por palavra-chave, fornecedor ou tipo de transação
-- Aplicação automática com sugestão de débito/crédito e histórico
-- Interface para criação, listagem e exclusão de regras
-- Aprendizado contínuo para reaplicação automática
-
-### 4. Dashboards
-- Gráficos interativos (barra, linha, pizza)
-- Filtros por empresa, competência, centro de custo e conta
-- KPIs de receita, despesa, lucro, total de lançamentos
-- Exportação para PDF (jsPDF) e Excel (SheetJS)
-
-## 🧱 Tecnologias Utilizadas
-
-- **Frontend:** Next.js + Tailwind + Chart.js
-- **Backend:** Supabase (PostgreSQL)
-- **Exportação:** jsPDF, html2canvas, SheetJS (xlsx)
-- **Armazenamento:** Supabase bucket ou AWS S3
-- **OCR / PDF (futuramente):** Tesseract.js, pdf-lib
-- **APIs:** Open Finance (Pluggy, Belvo, Banco Central - OAuth2)
-
-## 📦 Estrutura de Pastas (src/app)
-
-```
-├── cadastro-empresa/
-├── cadastro-grupos-economicos/
-├── importar-planilha/
-├── importar-planilha-detalhado/
-├── configuracao-layout-planilha/
-├── cadastro-regras-texto/
-├── aprovar-lancamentos/
-├── dashboard/
-├── dashboard-colorido/
-```
-
-## 🛠️ Como Rodar Localmente
+## 📦 Instalação
 
 ```bash
-git clone https://github.com/seu-usuario/oneflow-contabil.git
-cd oneflow-contabil
 npm install
-cp .env.local.example .env.local  # Configure com seus dados Supabase
 npm run dev
 ```
 
-## 🌐 Deploy no Vercel
+## ⚙️ Configuração do Supabase
+1. Crie um projeto no [https://supabase.com](https://supabase.com)
+2. Copie a `anon` key e URL para o arquivo `.env.local`
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<seu-projeto>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...chave...
+```
+3. Execute o script SQL disponível em `sql/estrutura_banco.sql`
 
-1. Suba o repositório para o GitHub
-2. Acesse [https://vercel.com](https://vercel.com) e importe o projeto
-3. Defina as variáveis `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Clique em Deploy
+## 📁 Estrutura de Diretórios
+```
+app/
+  └── dashboard-simples/       → Dashboard com tabela
+  └── dashboard-colorido/      → Dashboard com gráficos
+  └── importar-planilha/       → Upload e processamento com regras
+  └── revisar-importacoes/     → Conferência dos lançamentos pendentes
+  └── regras/
+      ├── cadastro/            → Cadastro de regras compostas
+      └── listar/              → Listagem, edição e exclusão de regras
 
----
+components/
+  ├── FiltrosDashboard.tsx
+  ├── ImportarPlanilhaComRegras.tsx
+  ├── TelaLancamentosRegistro.tsx
+  ├── DashboardSimples.tsx
+  ├── DashboardColorido.tsx
+  ├── CadastroRegrasCombinadas.tsx
+  └── ListagemRegrasCombinadas.tsx
 
-## 📄 Licença
+utils/
+  └── processa_importacao_com_regras.ts
+```
 
-Distribuído sob licença comercial. Para uso privado e licenciamento, entre em contato com a equipe do projeto.
+## ✅ Funcionalidades
+- Importação de planilhas Excel ou CSV
+- Aplicação de regras automáticas: ignorar ou aceitar
+- Cadastro de regras compostas com múltiplos critérios (campo, condição, valor)
+- Dashboards com filtros dinâmicos e exportação
+- Conferência manual de lançamentos pendentes
 
----
+## 📊 Dashboards
+- Resumo financeiro com gráficos
+- Evolução mensal das receitas
+- Distribuição por centro de custo
 
-## 💼 Contato Comercial
-
-- 📧 comercial@oneflow.com.br
-- 🌐 https://oneflow.com.br
+## ✍️ Licença
+Este projeto é de uso interno. Adaptável para diferentes grupos empresariais.
