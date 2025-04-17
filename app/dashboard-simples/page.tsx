@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { FiltrosDashboard } from '@/components/FiltrosDashboard';
 import { supabase } from '@/supabase/client';
-import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import * as XLSX from 'xlsx';
+import { FiltrosDashboard } from '@/components/FiltrosDashboard';
 
 export default function DashboardSimples() {
   const ref = useRef(null);
@@ -34,11 +34,10 @@ export default function DashboardSimples() {
 
   const exportarPDF = async () => {
     const canvas = await html2canvas(ref.current);
-    const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'pt', 'a4');
     const width = pdf.internal.pageSize.getWidth();
     const height = canvas.height * width / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, width, height);
     pdf.save('dashboard-simples.pdf');
   };
 
@@ -93,7 +92,7 @@ export default function DashboardSimples() {
               </tr>
             </thead>
             <tbody>
-              {dados.map((l, i) => (
+              {dados.map((l: any, i: number) => (
                 <tr key={i} className="text-center">
                   <td className="border px-2 py-1">{l.data}</td>
                   <td className="border px-2 py-1">{l.descricao}</td>
