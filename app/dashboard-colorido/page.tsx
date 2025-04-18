@@ -44,13 +44,15 @@ export default function DashboardColorido() {
   }, [filial, centroCusto, competencia]);
 
   const exportarPDF = async () => {
-    const canvas = await html2canvas(ref.current);
-    const pdf = new jsPDF('p', 'pt', 'a4');
-    const width = pdf.internal.pageSize.getWidth();
-    const height = canvas.height * width / canvas.width;
-    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, width, height);
-    pdf.save('dashboard.pdf');
-  };
+  if (!ref.current) return; // ✅ garante que o elemento existe
+
+  const canvas = await html2canvas(ref.current);
+  const pdf = new jsPDF('p', 'pt', 'a4');
+  const width = pdf.internal.pageSize.getWidth();
+  const height = canvas.height * width / canvas.width;
+  pdf.addImage(canvas, 'PNG', 0, 0, width, height);
+  pdf.save('relatorio.pdf');
+};
 
   const exportarExcel = () => {
     const wb = XLSX.utils.book_new();
