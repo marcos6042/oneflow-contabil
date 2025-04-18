@@ -26,7 +26,7 @@ export default function DashboardColorido() {
   const [competencia, setCompetencia] = useState('Todas');
   const [dados, setDados] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState(null);
+  const [erro, setErro] = useState<string | null>(null);
   const ref = useRef(null);
 
   useEffect(() => {
