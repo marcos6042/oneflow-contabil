@@ -3,17 +3,25 @@
 import { useState } from 'react';
 import { supabase } from '@/supabase/client';
 
+export type Criterio = {
+  campo: string;
+  condicao: string;
+  valor: string;
+};
+
 export default function CadastroRegrasCombinadas() {
   const [empresaId, setEmpresaId] = useState('');
   const [tipoRegra, setTipoRegra] = useState('ignorar');
   const [grupoCondicao, setGrupoCondicao] = useState('AND');
-  const [criterios, setCriterios] = useState([{ campo: '', condicao: 'CONTEM', valor: '' }]);
+  const [criterios, setCriterios] = useState<Criterio[]>([
+    { campo: '', condicao: 'CONTEM', valor: '' }
+  ]);
 
   const adicionarCriterio = () => {
     setCriterios([...criterios, { campo: '', condicao: 'CONTEM', valor: '' }]);
   };
 
-  const atualizarCriterio = (index: number, chave: string, valor: string) => {
+  const atualizarCriterio = (index: number, chave: keyof Criterio, valor: string) => {
     const atualizados = [...criterios];
     atualizados[index][chave] = valor;
     setCriterios(atualizados);
