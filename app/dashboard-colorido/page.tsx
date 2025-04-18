@@ -24,7 +24,7 @@ export default function DashboardColorido() {
   const [filial, setFilial] = useState('Todas');
   const [centroCusto, setCentroCusto] = useState('Todos');
   const [competencia, setCompetencia] = useState('Todas');
-  const [dados, setDados] = useState([]);
+  const [dados, setDados] = useState<Lancamento[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
   const ref = useRef(null);
