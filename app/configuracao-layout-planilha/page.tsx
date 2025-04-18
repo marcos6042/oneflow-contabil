@@ -52,7 +52,9 @@ export default function Page() {
           ))}
         </tbody>
       </table>
-      <button onClick={salvarLayout} className="bg-blue-600 text-white px-4 py-2 rounded">Salvar Layout</button>
+      <button onClick={salvarLayout} className="bg-blue-600 text-white px-4 py-2 rounded">
+        Salvar Layout
+      </button>
     </div>
   );
 }
