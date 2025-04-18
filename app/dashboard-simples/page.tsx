@@ -1,5 +1,5 @@
 'use client';
-
+import type { Lancamento } from '@/types/supabase';
 import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/supabase/client';
 import html2canvas from 'html2canvas';
