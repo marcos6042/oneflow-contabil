@@ -1,5 +1,5 @@
 'use client';
-
+import type { LancamentoImportado } from '@/types/supabase';
 import { useState } from 'react';
 
 export default function Page() {
