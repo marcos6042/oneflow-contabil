@@ -1,5 +1,5 @@
 'use client';
-
+import type { GrupoEconomico } from '@/types/supabase';
 import { useState } from 'react';
 import { supabase } from '@/supabase/client';
 
