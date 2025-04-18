@@ -8,10 +8,10 @@ import * as XLSX from 'xlsx';
 import { FiltrosDashboard } from '@/components/FiltrosDashboard';
 
 export default function DashboardSimples() {
-  const ref = useRef(null);
-  const [dados, setDados] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [erro, setErro] = useState(null);
+  const ref = useRef<HTMLDivElement>(null);
+  const [dados, setDados] = useState<Lancamento[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [erro, setErro] = useState<string | null>(null);
 
   const [filial, setFilial] = useState('Todas');
   const [competencia, setCompetencia] = useState('Todas');
@@ -33,6 +33,7 @@ export default function DashboardSimples() {
   }, [filial, competencia, centroCusto]);
 
   const exportarPDF = async () => {
+    if (!ref.current) return;
     const canvas = await html2canvas(ref.current);
     const pdf = new jsPDF('p', 'pt', 'a4');
     const width = pdf.internal.pageSize.getWidth();
@@ -92,7 +93,7 @@ export default function DashboardSimples() {
               </tr>
             </thead>
             <tbody>
-              {dados.map((l: any, i: number) => (
+              {dados.map((l, i) => (
                 <tr key={i} className="text-center">
                   <td className="border px-2 py-1">{l.data}</td>
                   <td className="border px-2 py-1">{l.descricao}</td>
