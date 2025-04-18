@@ -1,5 +1,5 @@
 'use client';
-
+import type { LancamentoImportado, Empresa } from '@/types/supabase';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
 
