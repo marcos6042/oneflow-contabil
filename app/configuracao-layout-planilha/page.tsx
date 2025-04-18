@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function ConfiguracaoLayoutPlanilha() {
+export default function Page() {
   const [colunas, setColunas] = useState([
     { campo: 'data', letra: '' },
     { campo: 'descricao', letra: '' },
@@ -23,11 +23,6 @@ export default function ConfiguracaoLayoutPlanilha() {
   };
 
   const salvarLayout = () => {
-    const colunasValidas = colunas.every(c => /^[A-Z]{1,2}$/.test(c.letra));
-    if (!colunasValidas) {
-      alert('Preencha todas as colunas com letras válidas de A a AZ.');
-      return;
-    }
     alert('Layout salvo (simulado). Integre com Supabase se desejar persistir.');
   };
 
@@ -50,7 +45,7 @@ export default function ConfiguracaoLayoutPlanilha() {
                   value={c.letra}
                   onChange={e => atualizarColuna(i, e.target.value)}
                   className="border p-1 rounded w-full"
-                  placeholder=\"Ex: A até AZ\"
+                  placeholder="Ex: A, B, C..."
                 />
               </td>
             </tr>
