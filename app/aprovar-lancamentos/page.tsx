@@ -1,5 +1,5 @@
 'use client';
-
+import type { LancamentoImportado } from '@/types/supabase';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/supabase/client';
 
