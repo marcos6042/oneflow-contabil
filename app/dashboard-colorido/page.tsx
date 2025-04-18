@@ -1,5 +1,5 @@
 'use client';
-
+import type { Lancamento } from '@/types/supabase';
 import { useEffect, useRef, useState } from 'react';
 import { Bar, Pie, Line } from 'react-chartjs-2';
 import html2canvas from 'html2canvas';
