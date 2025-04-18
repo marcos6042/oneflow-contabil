@@ -27,7 +27,7 @@ export default function DashboardColorido() {
   const [dados, setDados] = useState<Lancamento[]>([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState<string | null>(null);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function carregarDados() {
@@ -44,15 +44,14 @@ export default function DashboardColorido() {
   }, [filial, centroCusto, competencia]);
 
   const exportarPDF = async () => {
-  if (!ref.current) return; // ✅ garante que o elemento existe
-
-  const canvas = await html2canvas(ref.current);
-  const pdf = new jsPDF('p', 'pt', 'a4');
-  const width = pdf.internal.pageSize.getWidth();
-  const height = canvas.height * width / canvas.width;
-  pdf.addImage(canvas, 'PNG', 0, 0, width, height);
-  pdf.save('relatorio.pdf');
-};
+    if (!ref.current) return;
+    const canvas = await html2canvas(ref.current);
+    const pdf = new jsPDF('p', 'pt', 'a4');
+    const width = pdf.internal.pageSize.getWidth();
+    const height = canvas.height * width / canvas.width;
+    pdf.addImage(canvas, 'PNG', 0, 0, width, height);
+    pdf.save('relatorio.pdf');
+  };
 
   const exportarExcel = () => {
     const wb = XLSX.utils.book_new();
@@ -63,7 +62,8 @@ export default function DashboardColorido() {
 
   const totalReceitas = dados.filter(d => d.tipo === 'receita').reduce((s, l) => s + Number(l.valor), 0);
   const totalDespesas = dados.filter(d => d.tipo === 'despesa').reduce((s, l) => s + Number(l.valor), 0);
-  const porCentro = dados.reduce((acc, cur) => {
+  const porCentro = dados.reduce<Record<string, number>>((acc, cur) => {
+    if (!cur.centro_custo) return acc;
     if (!acc[cur.centro_custo]) acc[cur.centro_custo] = 0;
     acc[cur.centro_custo] += Number(cur.valor);
     return acc;
