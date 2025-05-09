@@ -1,11 +1,11 @@
 body {
   font-family: sans-serif;
-  background-color: #f9fafb;
 }
-table {
-  border-collapse: collapse;
+
+h1, h2, h3 {
+  margin-bottom: 1rem;
 }
-th, td {
-  padding: 8px;
-  border: 1px solid #ddd;
+
+input, select, button {
+  margin-right: 0.5rem;
 }
