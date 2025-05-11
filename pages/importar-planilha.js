@@ -1,64 +1,51 @@
-'use client';
 import { useState } from 'react';
 import * as XLSX from 'xlsx';
-import Papa from 'papaparse';
 
 export default function ImportarPlanilha() {
   const [registros, setRegistros] = useState([]);
   const [colunas, setColunas] = useState([]);
 
-  const handleArquivo = (e) => {
+  function handleArquivo(e) {
     const file = e.target.files[0];
-    if (!file) return;
+    const reader = new FileReader();
 
-    if (file.name.endsWith('.csv')) {
-      Papa.parse(file, {
-        header: true,
-        skipEmptyLines: true,
-        complete: (result) => {
-          setColunas(Object.keys(result.data[0] || {}));
-          setRegistros(result.data);
-        }
-      });
-    } else if (file.name.endsWith('.xlsx')) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const workbook = XLSX.read(e.target.result, { type: 'binary' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const data = XLSX.utils.sheet_to_json(sheet);
-        setColunas(Object.keys(data[0] || {}));
-        setRegistros(data);
-      };
-      reader.readAsBinaryString(file);
-    } else {
-      alert('Formato inválido. Use CSV ou XLSX.');
-    }
-  };
+    reader.onload = (evt) => {
+      const data = evt.target.result;
+      const workbook = XLSX.read(data, { type: 'binary' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet);
+      setRegistros(json);
+      setColunas(Object.keys(json[0] || {}));
+    };
+
+    reader.readAsBinaryString(file);
+  }
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4 text-purple-700">Importar Planilha Financeira</h1>
-      <input type="file" accept=".csv,.xlsx" onChange={handleArquivo} className="mb-4" />
-      <div className="overflow-x-auto">
-        <table className="w-full border text-sm">
+    <div className="p-6 max-w-7xl mx-auto">
+      <h1 className="text-2xl font-bold text-purple-700 mb-4">Importar Planilha Financeira</h1>
+      <input type="file" accept=".xlsx,.csv" onChange={handleArquivo} className="border p-2 mb-4 rounded bg-white" />
+
+      {registros.length > 0 && (
+        <table className="w-full text-sm border bg-white rounded shadow mt-4">
           <thead className="bg-gray-100">
             <tr>
-              {colunas.map((col) => (
-                <th key={col} className="border px-2 py-1">{col}</th>
+              {colunas.map((c, i) => (
+                <th key={i} className="border px-2 py-1">{c}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {registros.map((reg, idx) => (
-              <tr key={idx}>
-                {colunas.map((col) => (
-                  <td key={col} className="border px-2 py-1">{reg[col]}</td>
+            {registros.map((row, i) => (
+              <tr key={i}>
+                {colunas.map((c, j) => (
+                  <td key={j} className="border px-2 py-1">{row[c]}</td>
                 ))}
               </tr>
             ))}
           </tbody>
         </table>
-      </div>
+      )}
     </div>
   );
 }
