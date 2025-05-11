@@ -1,39 +1,48 @@
-export function FiltrosDashboard({ filial, setFilial, centroCusto, setCentroCusto, competencia, setCompetencia, exportarPDF, exportarExcel }) {
+type FiltrosProps = {
+  filial: string;
+  setFilial: (value: string) => void;
+  centroCusto: string;
+  setCentroCusto: (value: string) => void;
+  competencia: string;
+  setCompetencia: (value: string) => void;
+  exportarPDF: () => void;
+  exportarExcel: () => void;
+};
+
+export function FiltrosDashboard({
+  filial,
+  setFilial,
+  centroCusto,
+  setCentroCusto,
+  competencia,
+  setCompetencia,
+  exportarPDF,
+  exportarExcel,
+}: FiltrosProps) {
   return (
-    <div className="flex flex-wrap gap-4 items-center mb-6">
-      <div>
-        <label className="block text-sm font-medium">Filial</label>
-        <select className="border p-2 rounded" value={filial} onChange={(e) => setFilial(e.target.value)}>
-          <option value="Todas">Todas</option>
-          <option value="SP">Filial SP</option>
-          <option value="MG">Filial MG</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium">Centro de Custo</label>
-        <select className="border p-2 rounded" value={centroCusto} onChange={(e) => setCentroCusto(e.target.value)}>
-          <option value="Todos">Todos</option>
-          <option value="ADM">Administrativo</option>
-          <option value="OPR">Operacional</option>
-        </select>
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium">Competência</label>
-        <select className="border p-2 rounded" value={competencia} onChange={(e) => setCompetencia(e.target.value)}>
-          <option value="Todas">Todas</option>
-          <option value="2024-01">2024-01</option>
-          <option value="2024-02">2024-02</option>
-          <option value="2024-03">2024-03</option>
-          <option value="2024-04">2024-04</option>
-        </select>
-      </div>
-
-      <div className="flex gap-2 mt-4 md:mt-6">
-        <button onClick={exportarPDF} className="bg-blue-600 text-white px-4 py-2 rounded">Exportar PDF</button>
-        <button onClick={exportarExcel} className="bg-green-600 text-white px-4 py-2 rounded">Exportar Excel</button>
-      </div>
+    <div className="flex flex-wrap gap-4 items-center mb-4">
+      <label>Filial:</label>
+      <select className="p-2 border rounded" value={filial} onChange={e => setFilial(e.target.value)}>
+        <option>Todas</option>
+        <option>Filial SP</option>
+        <option>Filial MG</option>
+      </select>
+      <label>Centro de Custo:</label>
+      <select className="p-2 border rounded" value={centroCusto} onChange={e => setCentroCusto(e.target.value)}>
+        <option>Todos</option>
+        <option>Administrativo</option>
+        <option>Operacional</option>
+      </select>
+      <label>Competência:</label>
+      <select className="p-2 border rounded" value={competencia} onChange={e => setCompetencia(e.target.value)}>
+        <option>Todas</option>
+        <option>2024-01</option>
+        <option>2024-02</option>
+        <option>2024-03</option>
+        <option>2024-04</option>
+      </select>
+      <button onClick={exportarPDF} className="bg-blue-600 text-white px-4 py-2 rounded">Exportar PDF</button>
+      <button onClick={exportarExcel} className="bg-green-600 text-white px-4 py-2 rounded">Exportar Excel</button>
     </div>
   );
 }
