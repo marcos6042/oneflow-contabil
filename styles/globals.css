@@ -1,8 +1,16 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* Custom styles */
 body {
   font-family: 'Inter', sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
 }
